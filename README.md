@@ -1,3 +1,3 @@
 ## UVA Solutions
 
-My solutions to some Uva problems using C++
+solutions to some Uva problems in C++
