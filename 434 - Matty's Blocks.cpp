@@ -1,24 +1,5 @@
-/*input
-2 26 6
-4 10
-16 14
-10 6 37
-20 4
-19 20
-19 2
-8 4
-7 19
-7 14
-3 17
-1 19
-18 1
-15 19
-
-*/
-
 #include <stdio.h>
 #include <cmath>
-#include <stdlib.h>
 #include <set> 
 #include <vector>
 #include <iostream>
@@ -53,6 +34,8 @@ using namespace std;
 #define sz size
 #define pb push_back
 #define mp make_pair
+#define ft first
+#define sd second
 
 #define VISITED 1
 #define UNVISITED 0
@@ -68,71 +51,48 @@ inline int toint(string s){int v; istringstream sin(s);sin>>v;return v;}
 inline ll toll(string s){ll v; istringstream sin(s);sin>>v;return v;}
 template<class T> inline string toString(T x) { ostringstream sout; sout << x; return sout.str();}
 template<class T> inline char toChar(T x) { ostringstream sout; sout << x; return sout.str()[0];}
-	
-double Eps = 1e-7;	
-
-struct interval
-{
-	double ft,rg;
-};
-
-bool Compare1(const interval &a ,const interval &b)
-{
-	if (a.ft +Eps < b.ft ) return true;
-	else if ( abs(a.ft - b.ft) > Eps) return false;
-	else return a.rg > b.rg +Eps; 
-
-}
-
-vector<interval> spr;
 
 int main()
 {
-	int n , l , w;
-	while ( cin >> n >> l >> w)
+	int T;
+	cin >> T;
+	while(T--)
 	{
-		spr.clear();
-		double dw = (double(w*w)/4.0), dx = 0;
-		int x , r;
-		FOR(i , n)
+		int k;
+		cin >> k;
+		int f[15], r[15];
+		bool vis[2][15] = {0};
+		FOR(i,k) cin >> f[i];
+		FOR(i,k) cin >> r[i];
+		int mn = 0;
+		FOR(i ,k)
 		{
-			cin >> x >> r;	
-			double d = (double)(r)*r - dw;
-			if(d > 0)
-				dx=sqrt((double)(r)*r - dw);
-			else dx = 0;
-			interval tmp;
-			tmp.ft = x - dx; tmp.rg = x + dx;
-			//cout << x <<" "<<r <<" "<<dx<<" "<<tmp.ft << " "<<tmp.rg <<endl;
-			spr.pb(tmp);
-		}
-
-		sort(spr.begin(), spr.end(),Compare1);
-		//cout << spr[0].ft << " "<< spr[0].rg<<endl;
-		double end = 0.0, far = 0.0;
-		int res = 0,j = 0;
-		for(int i = 0 ; i < n;i =j)
-		{	
-			//cout << i << " " << j<< endl;
-			far = 0;
-			while( j < n && spr[j].ft < end+ Eps )
+			FOR(j , k)
 			{
-				//cout << j << endl;
-				if(spr[j].rg > far+ Eps )
+				if(f[i] == r[j] && !vis[0][i] && !vis[1][j])
 				{
-					far = spr[j].rg;
+					mn += f[i];
+					vis[0][i] = 1;
+					vis[1][j] = 1;
 				}
-				j++;
 			}
-			end = far;
-			res++;
-			if(j == i || l  < end +Eps) break;
-			
 		}
-		
-		if ( end +Eps> l )
-			cout << res << endl;
-		else	cout << -1<< endl;
-
+		FOR(i,k)
+		{
+			if(!vis[0][i]) mn+= f[i];
+			if(!vis[1][i]) mn += r[i];
+		}
+		//cout << mn << endl;
+		int mx = 0;
+		FOR(i , k)
+		{
+			FOR(j , k)
+			{
+				mx += min(f[i], r[j]);
+			}
+		}	
+		//cout << mx << endl;
+		int add = mx - mn;
+		cout << "Matty needs at least "<< mn <<" blocks, and can add at most "<< add <<" extra blocks."<< endl;
 	}
 }
